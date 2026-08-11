@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Dashboard — COMPANY NAME</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --navy: #12234b;
+    --navy-dark: #0d1830;
+    --navy-hover: #1a3468;
+    --gold: #d4a017;
+    --gold-dark: #b08613;
+    --bg: #fafafa;
+    --white: #ffffff;
+    --border: #e6e6e6;
+    --text: #33373d;
+    --text-muted: #7a7a7a;
+    --green: #1e7e34;
+    --green-bg: #e6f4ea;
+    --amber: #8a6100;
+    --amber-bg: #fff4dd;
+    --red: #b02a2a;
+    --red-bg: #fde8e8;
+    --radius: 8px;
+    --t-fast: .15s ease-in-out;
+    --font: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+  }
+  a { color: inherit; }
+  h1, h2, h3, h4 { margin: 0; color: var(--navy); }
+  button { font-family: inherit; }
+
+  /* Top bar */
+  .hr-topbar {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .hr-topbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .hr-brand { font-weight: 800; font-size: 16px; }
+  .hr-brand-tag {
+    font-weight: 600;
+    font-size: 11px;
+    color: rgba(255,255,255,.6);
+    margin-left: 10px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .hr-topnav { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+  .hr-user { color: rgba(255,255,255,.75); }
+  .hr-logout { color: rgba(255,255,255,.75); text-decoration: none; }
+  .hr-logout:hover { color: var(--white); text-decoration: underline; }
+
+  /* Layout */
+  .hr-container { max-width: 1280px; margin: 0 auto; padding: 32px 24px 64px; }
+  .hr-page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .hr-page-head h1 { font-size: 36px; font-weight: 800; margin-bottom: 6px; }
+  .hr-page-head p { margin: 0; color: var(--text-muted); font-size: 14.5px; }
+
+  .date-filter { text-align: right; }
+  .date-filter-inputs { display: flex; align-items: flex-end; gap: 6px; }
+  .date-filter-field { display: flex; flex-direction: column; text-align: left; }
+  .date-filter-field label {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 2px;
+  }
+  .date-filter-field input {
+    padding: 4px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--white);
+    width: 118px;
+  }
+  .date-filter-field input:focus { border-color: var(--gold); outline: none; }
+  .btn-filter-apply {
+    height: 26px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    padding: 0 12px;
+    font-weight: 700;
+    font-size: 11.5px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-filter-apply:hover { background: var(--navy-hover); }
+  .date-filter-status {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .date-filter-status button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--navy-hover);
+    text-decoration: underline;
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  @media (max-width: 700px) {
+    .date-filter { text-align: left; }
+    .date-filter-inputs { flex-wrap: wrap; }
+  }
+
+  /* Stat tiles */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-tile {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .stat-value { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+  .stat-breakdown {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .stat-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    gap: 8px;
+  }
+  .stat-breakdown-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .stat-breakdown-row .role-dot { flex-shrink: 0; }
+  .stat-breakdown-count { font-weight: 700; color: var(--text); flex-shrink: 0; }
+  .stat-breakdown-empty { font-size: 11px; color: var(--text-muted); font-style: italic; }
+
+  /* Stage breakdown chips */
+  .stage-breakdown-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .stage-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  .stage-chip {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+  }
+  .stage-chip .count { font-weight: 800; color: var(--navy); }
+  .stage-chip.outcome { background: #f7f4f1; }
+
+  /* Funnel / kanban */
+  .funnel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .funnel-head h2 { font-size: 19px; }
+  .funnel-head p { margin: 0; font-size: 13px; color: var(--text-muted); }
+
+  .kanban-board {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+  }
+  .kanban-column {
+    flex: 0 0 250px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    max-height: 680px;
+  }
+  .kanban-column.outcome-column { background: #f7f4f1; }
+  .kanban-column-head {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .kanban-column-head h3 { font-size: 13px; }
+  .kanban-column-count {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1px 8px;
+  }
+  .kanban-cards {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    min-height: 60px;
+    transition: background var(--t-fast);
+  }
+  .kanban-cards.drag-over {
+    background: rgba(212,160,23,.12);
+    outline: 2px dashed var(--gold);
+    outline-offset: -4px;
+    border-radius: 6px;
+  }
+  .kanban-empty {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 16px 8px;
+    pointer-events: none;
+  }
+
+  .candidate-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    cursor: grab;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    transition: box-shadow var(--t-fast), transform var(--t-fast), opacity var(--t-fast);
+  }
+  .candidate-card.dragging {
+    opacity: .4;
+  }
+  .candidate-card:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,.1);
+    transform: translateY(-2px);
+  }
+  .candidate-card:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .cc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .cc-name { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 2px; }
+  .cc-role { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .cc-meta { display: flex; justify-content: space-between; align-items: center; }
+  .cc-date { font-size: 11px; color: var(--text-muted); }
+
+  .role-badge {
+    flex-shrink: 0;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 2px 6px;
+    border-radius: 5px;
+  }
+  .role-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .score-badge {
+    font-weight: 700;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .score-badge.high { background: var(--green-bg); color: var(--green); }
+  .score-badge.mid { background: var(--amber-bg); color: var(--amber); }
+  .score-badge.low { background: var(--red-bg); color: var(--red); }
+
+  /* Status pills (used in cards + modal) */
+  .status-pill {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+  .status-pill.pending { background: #eee; color: var(--text-muted); }
+  .status-pill.progress { background: var(--amber-bg); color: var(--amber); }
+  .status-pill.done { background: var(--green-bg); color: var(--green); }
+  .status-pill.muted { background: #eee; color: var(--text-muted); }
+  .status-pill.flagged { background: var(--red-bg); color: var(--red); }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13,24,48,.55);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal-panel {
+    background: var(--white);
+    border-radius: var(--radius);
+    max-width: 760px;
+    width: 100%;
+    padding: 36px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 4px;
+  }
+  .modal-close:hover { color: var(--navy); }
+
+  .profile-header h2 { font-size: 22px; margin-bottom: 4px; }
+  .profile-sub { color: var(--text-muted); font-size: 13.5px; margin-bottom: 10px; }
+  .current-stage-line { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+  .current-stage-pill {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 12.5px;
+    color: var(--navy);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2px 12px;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 28px;
+    margin-bottom: 28px;
+  }
+  .profile-field label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .profile-field div { font-size: 14.5px; font-weight: 600; color: var(--text); }
+  .profile-field a { color: var(--navy-hover); }
+
+  .profile-section { margin-bottom: 26px; }
+  .profile-section h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--gold-dark);
+    margin-bottom: 10px;
+  }
+  .profile-section .hint { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .status-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .status-item label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 6px;
+  }
+  .status-select {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 4px 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 12.5px;
+    cursor: pointer;
+    appearance: auto;
+  }
+  .status-select:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .notes-list { margin: 0 0 12px; padding: 0; list-style: none; }
+  .note-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 13.5px;
+  }
+  .note-item .note-meta {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .note-item .note-text { white-space: pre-wrap; }
+  .note-edit-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: 6px;
+    color: var(--navy-hover);
+    text-decoration: underline;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .note-edit-btn:hover { color: var(--navy); }
+  .note-edit-textarea {
+    width: 100%;
+    min-height: 60px;
+    resize: vertical;
+    padding: 8px 10px;
+    border: 1.5px solid var(--gold);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13.5px;
+  }
+  .note-edit-textarea:focus { outline: none; }
+  .note-edit-actions { display: flex; gap: 8px; margin-top: 6px; }
+  .btn-save-note, .btn-cancel-note {
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 700;
+    font-size: 12.5px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-save-note { background: var(--navy); color: var(--white); }
+  .btn-save-note:hover { background: var(--navy-hover); }
+  .btn-cancel-note { background: var(--white); color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-cancel-note:hover { color: var(--text); }
+  .add-note-row { display: flex; gap: 8px; }
+  .add-note-row textarea {
+    flex: 1;
+    resize: vertical;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13.5px;
+  }
+  .add-note-row textarea:focus { border-color: var(--gold); outline: none; }
+  .btn-add-note {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 0 16px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .btn-add-note:hover { background: var(--navy-hover); }
+
+  .timeline { list-style: none; margin: 0; padding: 0; }
+  .timeline-item {
+    position: relative;
+    padding-left: 20px;
+    padding-bottom: 16px;
+    border-left: 2px solid var(--border);
+    margin-left: 4px;
+  }
+  .timeline-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--white);
+  }
+  .timeline-date { font-size: 11.5px; color: var(--text-muted); }
+  .timeline-label { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  .resume-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--navy-hover);
+    text-decoration: none;
+  }
+  .resume-link:hover { background: var(--white); }
+
+  .resume-recording-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .recording-value { font-size: 14.5px; color: var(--text); }
+  .recording-value a { color: var(--navy-hover); }
+  @media (max-width: 600px) {
+    .resume-recording-grid { grid-template-columns: 1fr; gap: 20px; }
+  }
+
+  .position-highlight {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .role-badge-lg {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .position-highlight-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .position-highlight-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+  .resume-highlight-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .resume-highlight-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+  .resume-highlight-item input[type="radio"] {
+    flex-shrink: 0;
+    accent-color: var(--gold-dark);
+    pointer-events: none;
+  }
+
+  @media (max-width: 900px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .profile-grid { grid-template-columns: 1fr; }
+    .status-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Footer — expandable SOP/file/resource links, collapsed by default */
+  .hr-footer {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .hr-footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 24px 32px;
+  }
+  .footer-doc-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0 56px;
+    margin: 0 auto 20px;
+  }
+  .footer-doc { min-width: 170px; max-width: 220px; }
+  .footer-doc summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 10px 0;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-doc summary::-webkit-details-marker { display: none; }
+  .footer-doc summary::after {
+    content: '+';
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .footer-doc[open] summary::after { content: '\2212'; }
+  .footer-doc-content {
+    padding: 12px 4px 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .footer-doc-content p { margin: 0; }
+  @media (max-width: 600px) {
+    .footer-doc-links { flex-direction: column; align-items: stretch; gap: 0; }
+    .footer-doc { max-width: none; }
+  }
+  .hr-footer-fine {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<header class="hr-topbar">
+  <div class="hr-topbar-inner">
+    <div class="hr-brand">COMPANY NAME<span class="hr-brand-tag">HR Portal</span></div>
+    <nav class="hr-topnav">
+      <span class="hr-user">HR Admin</span>
+      <a href="index.html" class="hr-logout">Log Out</a>
+    </nav>
+  </div>
+</header>
+
+<main class="hr-container">
+  <div class="hr-page-head">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Overview of your hiring funnel and candidate pipeline. All data below is sample/mock content.</p>
+    </div>
+    <div class="date-filter">
+      <div class="date-filter-inputs">
+        <div class="date-filter-field">
+          <label for="filterFrom">From</label>
+          <input type="date" id="filterFrom">
+        </div>
+        <div class="date-filter-field">
+          <label for="filterTo">To</label>
+          <input type="date" id="filterTo">
+        </div>
+        <button type="button" class="btn-filter-apply" id="applyFilterBtn">Apply</button>
+      </div>
+      <div class="date-filter-status" id="dateFilterStatus">Showing all applicants (no date filter)</div>
+    </div>
+  </div>
+
+  <div class="stat-grid" id="statGrid"></div>
+
+  <div class="stage-breakdown-label">Candidates by position</div>
+  <div class="stage-breakdown" id="positionBreakdown"></div>
+
+  <div class="stage-breakdown-label">Candidates by stage</div>
+  <div class="stage-breakdown" id="stageBreakdown"></div>
+
+  <div class="funnel-head">
+    <h2>Hiring Funnel</h2>
+    <p>Click a candidate card to view their full profile.</p>
+  </div>
+  <div class="kanban-board" id="kanbanBoard"></div>
+</main>
+
+<footer class="hr-footer">
+  <div class="hr-footer-inner">
+    <div class="footer-doc-links">
+      <details class="footer-doc">
+        <summary>SOPs</summary>
+        <div class="footer-doc-content">
+          <p>[No SOPs added yet &mdash; standard operating procedure documents will be linked here.]</p>
+        </div>
+      </details>
+      <details class="footer-doc">
+        <summary>Company Files</summary>
+        <div class="footer-doc-content">
+          <p>[No files added yet &mdash; shared company documents will be linked here.]</p>
+        </div>
+      </details>
+      <details class="footer-doc">
+        <summary>Resources</summary>
+        <div class="footer-doc-content">
+          <p>[No resources added yet &mdash; training material and reference links will be linked here.]</p>
+        </div>
+      </details>
+    </div>
+    <div class="hr-footer-fine">&copy; 2026 COMPANY NAME &mdash; Internal HR Portal</div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="candidateModal" hidden>
+  <div class="modal-panel">
+    <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  "use strict";
+
+  // ---- Config: stages, roles ----------------------------------------
+  var STAGES = ['New Applicant', 'Initial Screening', 'Video Verification', 'Assessment', 'Interview', 'Offer', 'Hired'];
+  var OUTCOME_STAGES = ['Rejected', 'Withdrawn'];
+  var TODAY = new Date('2026-08-11');
+
+  var ROLES_NO_RECORDING = ['Transaction Coordinator'];
+  function requiresRecording(role) {
+    return ROLES_NO_RECORDING.indexOf(role) === -1;
+  }
+
+  // Short position codes + colors — used on kanban cards and doubles as the
+  // legend in the "Candidates by position" breakdown.
+  var ROLE_META = {
+    'Cold Caller': { code: 'CC', bg: '#e6f0fd', color: '#1a56db', department: 'Acquisitions' },
+    'Deep Prospector': { code: 'DP', bg: '#f2e8fd', color: '#6b21a8', department: 'Acquisitions' },
+    'Follow-Up Specialist': { code: 'FS', bg: '#e0f7f5', color: '#0f766e', department: 'Acquisitions' },
+    'Acquisitions Manager / Closer': { code: 'AM', bg: '#fff4dd', color: '#8a6100', department: 'Acquisitions' },
+    'Transaction Coordinator': { code: 'TC', bg: '#e6f4ea', color: '#1e7e34', department: 'Transactions' },
+    'Disposition Manager': { code: 'DM', bg: '#ffe8d9', color: '#b34700', department: 'Disposition' }
+  };
+  var ROLE_ORDER = Object.keys(ROLE_META);
+  function roleMeta(role) {
+    return ROLE_META[role] || { code: '--', bg: '#eee', color: '#666', department: '' };
+  }
+
+  // ---- Mock candidates (minimal fields; everything else is derived) --
+  var CANDIDATES = [
+    { id: 'c1', name: 'Maria Gonzalez', email: 'maria.gonzalez@example.com', phone: '+1 (555) 201-3344', profileUrl: 'https://linkedin.com/in/mariagonzalez', role: 'Cold Caller', dateApplied: '2026-08-10', currentStage: 'New Applicant', score: 78 },
+    { id: 'c2', name: 'Victor Alonso', email: 'victor.alonso@example.com', phone: '+1 (555) 322-5510', profileUrl: 'https://linkedin.com/in/victoralonso', role: 'Acquisitions Manager / Closer', dateApplied: '2026-08-09', currentStage: 'New Applicant', score: 58 },
+    { id: 'c3', name: 'James Okafor', email: 'james.okafor@example.com', phone: '+1 (555) 118-2290', profileUrl: 'https://linkedin.com/in/jamesokafor', role: 'Cold Caller', dateApplied: '2026-08-09', currentStage: 'New Applicant', score: 65 },
+    { id: 'c4', name: 'Priya Shah', email: 'priya.shah@example.com', phone: '+1 (555) 447-8821', profileUrl: 'https://linkedin.com/in/priyashah', role: 'Deep Prospector', dateApplied: '2026-08-08', currentStage: 'Initial Screening', score: 82 },
+    { id: 'c5', name: 'Daniel Cruz', email: 'daniel.cruz@example.com', phone: '+1 (555) 630-4471', profileUrl: 'https://linkedin.com/in/danielcruz', role: 'Follow-Up Specialist', dateApplied: '2026-08-07', currentStage: 'Initial Screening', score: 71 },
+    { id: 'c6', name: 'Aisha Bello', email: 'aisha.bello@example.com', phone: '+1 (555) 274-9903', profileUrl: 'https://linkedin.com/in/aishabello', role: 'Acquisitions Manager / Closer', dateApplied: '2026-08-06', currentStage: 'Video Verification', score: 88 },
+    { id: 'c7', name: 'Thomas Reyes', email: 'thomas.reyes@example.com', phone: '+1 (555) 809-1123', profileUrl: 'https://linkedin.com/in/thomasreyes', role: 'Cold Caller', dateApplied: '2026-08-05', currentStage: 'Video Verification', score: 74 },
+    { id: 'c8', name: 'Linda Park', email: 'linda.park@example.com', phone: '+1 (555) 556-2287', profileUrl: 'https://linkedin.com/in/lindapark', role: 'Transaction Coordinator', dateApplied: '2026-08-04', currentStage: 'Assessment', score: 90 },
+    { id: 'c9', name: 'Carlos Medina', email: 'carlos.medina@example.com', phone: '+1 (555) 992-6634', profileUrl: 'https://linkedin.com/in/carlosmedina', role: 'Disposition Manager', dateApplied: '2026-08-03', currentStage: 'Assessment', score: 69 },
+    { id: 'c10', name: 'Fatima Noor', email: 'fatima.noor@example.com', phone: '+1 (555) 341-7765', profileUrl: 'https://linkedin.com/in/fatimanoor', role: 'Deep Prospector', dateApplied: '2026-07-30', currentStage: 'Interview', score: 85 },
+    { id: 'c11', name: 'Kevin Santos', email: 'kevin.santos@example.com', phone: '+1 (555) 718-4402', profileUrl: 'https://linkedin.com/in/kevinsantos', role: 'Acquisitions Manager / Closer', dateApplied: '2026-07-28', currentStage: 'Interview', score: 92 },
+    { id: 'c12', name: 'Grace Adeyemi', email: 'grace.adeyemi@example.com', phone: '+1 (555) 263-9981', profileUrl: 'https://linkedin.com/in/graceadeyemi', role: 'Follow-Up Specialist', dateApplied: '2026-07-25', currentStage: 'Offer', score: 87 },
+    { id: 'c13', name: 'Marcus Bell', email: 'marcus.bell@example.com', phone: '+1 (555) 475-3320', profileUrl: 'https://linkedin.com/in/marcusbell', role: 'Cold Caller', dateApplied: '2026-07-20', currentStage: 'Offer', score: 80 },
+    { id: 'c14', name: 'Sofia Ramirez', email: 'sofia.ramirez@example.com', phone: '+1 (555) 806-1147', profileUrl: 'https://linkedin.com/in/sofiaramirez', role: 'Transaction Coordinator', dateApplied: '2026-07-15', currentStage: 'Hired', score: 91 },
+    { id: 'c15', name: 'Ben Nakamura', email: 'ben.nakamura@example.com', phone: '+1 (555) 590-2268', profileUrl: 'https://linkedin.com/in/bennakamura', role: 'Disposition Manager', dateApplied: '2026-07-10', currentStage: 'Hired', score: 86 },
+    { id: 'c16', name: 'Julia Novak', email: 'julia.novak@example.com', phone: '+1 (555) 134-7756', profileUrl: 'https://linkedin.com/in/julianovak', role: 'Cold Caller', dateApplied: '2026-07-22', currentStage: 'Rejected', reachedStage: 'Video Verification', score: 45 },
+    { id: 'c17', name: 'Omar Haddad', email: 'omar.haddad@example.com', phone: '+1 (555) 887-4415', profileUrl: 'https://linkedin.com/in/omarhaddad', role: 'Deep Prospector', dateApplied: '2026-07-18', currentStage: 'Rejected', reachedStage: 'Initial Screening', score: 52 },
+    { id: 'c18', name: 'Rachel Kim', email: 'rachel.kim@example.com', phone: '+1 (555) 209-6631', profileUrl: 'https://linkedin.com/in/rachelkim', role: 'Follow-Up Specialist', dateApplied: '2026-07-12', currentStage: 'Withdrawn', reachedStage: 'Interview', score: 60 }
+  ];
+
+  // Hand-authored notes for a few candidates; everyone else starts with none.
+  var SEED_NOTES = {
+    c6: [{ date: '2026-08-07', author: 'HR Admin', text: 'Strong voice recording, very confident. Fast-track to assessment.' }],
+    c10: [{ date: '2026-07-31', author: 'HR Admin', text: 'Great research instincts on the screening call. Panel liked her.' }],
+    c11: [{ date: '2026-07-29', author: 'HR Admin', text: 'Closed a mock negotiation exercise well. Strong offer candidate.' }],
+    c16: [{ date: '2026-07-23', author: 'HR Admin', text: 'Video verification raised concerns about phone presence. Passing for now.' }]
+  };
+  CANDIDATES.forEach(function(c) { c.notes = (SEED_NOTES[c.id] || []).slice(); });
+
+  // Placeholder "what the resume says that's relevant to this role" — stands
+  // in for real resume parsing, which isn't connected yet.
+  var RESUME_HIGHLIGHTS = {
+    c1: ['2 years of outbound sales experience', 'Worked at a home-improvement call center', 'Comfortable with high-volume dialing'],
+    c2: ['5+ years closing real estate deals', 'Former loan officer', 'Strong negotiation background'],
+    c3: ['1 year of customer service call center experience', 'No prior real estate background listed'],
+    c4: ['Background in data research and lead generation', 'Prior experience in B2B SaaS lead gen', 'Lists familiarity with skip tracing tools'],
+    c5: ['3 years in customer success', 'Experience following up on renewal pipelines', 'Comfortable with CRM cadences'],
+    c6: ['Former mortgage broker', '4 years of high-ticket sales closing experience'],
+    c7: ['6 months of telemarketing experience', 'Notes familiarity with the Kixie dialer'],
+    c8: ['4 years as a title company processor', 'Well-versed in escrow and closing documentation'],
+    c9: ['2 years running an investor buyers list', 'Experience at a local wholesaling company'],
+    c10: ['Former paralegal', 'Strong public-records research experience', 'New to skip tracing tools specifically'],
+    c11: ['7 years in real estate acquisitions', 'Over $2M in closed deal volume listed'],
+    c12: ['3 years of inside sales follow-up experience', 'Uses Follow Up Boss CRM'],
+    c13: ['1.5 years of cold-calling experience in solar sales', 'Comfortable in rejection-heavy environments'],
+    c14: ['5 years as a licensed transaction coordinator', 'Experience at a regional brokerage'],
+    c15: ['Built a 200+ contact cash-buyer network', 'Prior wholesaling role experience'],
+    c16: ['No prior cold-calling experience listed', 'Resume focuses on retail customer service'],
+    c17: ['General admin background', 'No skip tracing or research-specific experience noted'],
+    c18: ['2 years in customer support', 'Limited CRM automation experience listed']
+  };
+  CANDIDATES.forEach(function(c) {
+    c.resumeHighlights = RESUME_HIGHLIGHTS[c.id] || ['No resume highlights available for this candidate yet.'];
+    // Manual stage-status overrides — null means "derive from pipeline stage".
+    c.videoOverride = null;
+    c.assessmentOverride = null;
+    c.interviewOverride = null;
+  });
+
+  // Sets the initial display order (newest first). After this, card order
+  // within a column is driven by array order, not re-sorted automatically —
+  // that's what lets drag-to-reorder within a column stick.
+  CANDIDATES.sort(function(a, b) { return new Date(b.dateApplied) - new Date(a.dateApplied); });
+
+  // ---- Derivation helpers ---------------------------------------------
+  function stageIndexForCandidate(c) {
+    var stage = (c.currentStage === 'Rejected' || c.currentStage === 'Withdrawn') ? c.reachedStage : c.currentStage;
+    return STAGES.indexOf(stage);
+  }
+
+  function scoreClass(score) {
+    if (score >= 80) return 'high';
+    if (score >= 60) return 'mid';
+    return 'low';
+  }
+
+  // Each stage status can be manually overridden (e.g. to expedite a
+  // candidate straight to Interview without Video Verification), so these
+  // are editable dropdowns, not fixed labels. Manual pick wins; otherwise
+  // it falls back to what the candidate's overall stage implies.
+  var STATUS_OPTIONS = {
+    video: [
+      { label: 'Not Required', type: 'muted' },
+      { label: 'Pending', type: 'pending' },
+      { label: 'Submitted — Awaiting Review', type: 'progress' },
+      { label: 'Verified', type: 'done' },
+      { label: 'Skipped', type: 'flagged' }
+    ],
+    assessment: [
+      { label: 'Not Started', type: 'pending' },
+      { label: 'In Progress', type: 'progress' },
+      { label: 'Completed', type: 'done' },
+      { label: 'Skipped', type: 'flagged' }
+    ],
+    interview: [
+      { label: 'Not Scheduled', type: 'pending' },
+      { label: 'Scheduled', type: 'progress' },
+      { label: 'Completed', type: 'done' },
+      { label: 'Skipped', type: 'flagged' }
+    ]
+  };
+  function typeForStatusLabel(field, label) {
+    var match = STATUS_OPTIONS[field].filter(function(o) { return o.label === label; })[0];
+    return match ? match.type : 'pending';
+  }
+
+  function statusForVideo(c) {
+    if (c.videoOverride) return { label: c.videoOverride, type: typeForStatusLabel('video', c.videoOverride) };
+    if (!requiresRecording(c.role)) return { label: 'Not Required', type: 'muted' };
+    var idx = stageIndexForCandidate(c);
+    var vIdx = STAGES.indexOf('Video Verification');
+    if (idx < vIdx) return { label: 'Pending', type: 'pending' };
+    if (idx === vIdx) return { label: 'Submitted — Awaiting Review', type: 'progress' };
+    return { label: 'Verified', type: 'done' };
+  }
+
+  function statusForAssessment(c) {
+    if (c.assessmentOverride) return { label: c.assessmentOverride, type: typeForStatusLabel('assessment', c.assessmentOverride) };
+    var idx = stageIndexForCandidate(c);
+    var aIdx = STAGES.indexOf('Assessment');
+    if (idx < aIdx) return { label: 'Not Started', type: 'pending' };
+    if (idx === aIdx) return { label: 'In Progress', type: 'progress' };
+    return { label: 'Completed', type: 'done' };
+  }
+
+  function statusForInterview(c) {
+    if (c.interviewOverride) return { label: c.interviewOverride, type: typeForStatusLabel('interview', c.interviewOverride) };
+    var idx = stageIndexForCandidate(c);
+    var iIdx = STAGES.indexOf('Interview');
+    if (idx < iIdx) return { label: 'Not Scheduled', type: 'pending' };
+    if (idx === iIdx) return { label: 'Scheduled', type: 'progress' };
+    return { label: 'Completed', type: 'done' };
+  }
+
+  function fmtDate(d) {
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  function buildTimeline(c) {
+    var applied = new Date(c.dateApplied + 'T00:00:00');
+    var idx = stageIndexForCandidate(c);
+    var events = [];
+    for (var i = 0; i <= idx; i++) {
+      var d = new Date(applied.getTime() + i * 2 * 24 * 3600 * 1000);
+      events.push({ date: fmtDate(d), label: i === 0 ? 'Application submitted' : 'Moved to ' + STAGES[i] });
+    }
+    if (c.currentStage === 'Rejected' || c.currentStage === 'Withdrawn') {
+      var endD = new Date(applied.getTime() + (idx + 1) * 2 * 24 * 3600 * 1000);
+      events.push({
+        date: fmtDate(endD),
+        label: c.currentStage === 'Rejected' ? 'Application rejected' : 'Candidate withdrew application'
+      });
+    }
+    return events;
+  }
+
+  // ---- Date range filter --------------------------------------------
+  // Applies to every widget on the page (stats, breakdowns, kanban) so
+  // "how many applicants on this day/range" has one consistent answer.
+  var dateFilter = null; // { from: 'YYYY-MM-DD', to: 'YYYY-MM-DD' } or null
+
+  function getFilteredCandidates() {
+    if (!dateFilter) return CANDIDATES;
+    var fromD = new Date(dateFilter.from + 'T00:00:00');
+    var toD = new Date(dateFilter.to + 'T23:59:59');
+    return CANDIDATES.filter(function(c) {
+      var d = new Date(c.dateApplied + 'T00:00:00');
+      return d >= fromD && d <= toD;
+    });
+  }
+
+  function fmtDateShort(isoDate) {
+    return fmtDate(new Date(isoDate + 'T00:00:00'));
+  }
+
+  function renderDateFilterStatus() {
+    var el = document.getElementById('dateFilterStatus');
+    if (!dateFilter) {
+      el.textContent = 'Showing all applicants (no date filter)';
+      return;
+    }
+    var count = getFilteredCandidates().length;
+    var rangeText = dateFilter.from === dateFilter.to
+      ? fmtDateShort(dateFilter.from)
+      : fmtDateShort(dateFilter.from) + ' – ' + fmtDateShort(dateFilter.to);
+    el.innerHTML = count + ' applicant' + (count === 1 ? '' : 's') + ' applied ' + rangeText +
+      ' &middot; <button type="button" id="clearFilterBtn">Clear</button>';
+    var clearBtn = document.getElementById('clearFilterBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function() {
+        dateFilter = null;
+        document.getElementById('filterFrom').value = '';
+        document.getElementById('filterTo').value = '';
+        renderAll();
+      });
+    }
+  }
+
+  function renderAll() {
+    renderDateFilterStatus();
+    renderStats();
+    renderStageBreakdown();
+    renderPositionBreakdown();
+    renderKanban();
+  }
+
+  // ---- Stat calculations ------------------------------------------------
+
+  function positionBreakdownHtml(list) {
+    var rows = ROLE_ORDER.map(function(role) {
+      var count = list.filter(function(c) { return c.role === role; }).length;
+      if (count === 0) return '';
+      var meta = roleMeta(role);
+      return '<div class="stat-breakdown-row">' +
+        '<span class="stat-breakdown-role"><span class="role-dot" style="background:' + meta.color + ';"></span>' + role + '</span>' +
+        '<span class="stat-breakdown-count">' + count + '</span>' +
+      '</div>';
+    }).join('');
+    return rows || '<div class="stat-breakdown-empty">No candidates</div>';
+  }
+
+  function renderStats() {
+    // Every candidate falls into exactly one of these four buckets, so the
+    // numbers reconcile: Total = Active + Hired + Rejected + Withdrawn.
+    // "New Applicants" is a subset of "Active in Pipeline" (those still
+    // sitting in the very first stage) — same definition as the "New
+    // Applicant" stage used everywhere else on this dashboard.
+    var scoped = getFilteredCandidates();
+    var totalList = scoped;
+    var newList = scoped.filter(function(c) { return c.currentStage === 'New Applicant'; });
+    var hiredList = scoped.filter(function(c) { return c.currentStage === 'Hired'; });
+    var activeList = scoped.filter(function(c) {
+      return STAGES.indexOf(c.currentStage) !== -1 && c.currentStage !== 'Hired';
+    });
+
+    var tiles = [
+      { value: totalList.length, label: 'Total Applicants', list: totalList },
+      { value: newList.length, label: 'New Applicants', list: newList },
+      { value: activeList.length, label: 'Active in Pipeline', list: activeList },
+      { value: hiredList.length, label: 'Hired', list: hiredList }
+    ];
+
+    var grid = document.getElementById('statGrid');
+    grid.innerHTML = '';
+    tiles.forEach(function(t) {
+      var el = document.createElement('div');
+      el.className = 'stat-tile';
+      el.innerHTML =
+        '<div class="stat-value">' + t.value + '</div>' +
+        '<div class="stat-label">' + t.label + '</div>' +
+        '<div class="stat-breakdown">' + positionBreakdownHtml(t.list) + '</div>';
+      grid.appendChild(el);
+    });
+  }
+
+  function renderStageBreakdown() {
+    var scoped = getFilteredCandidates();
+    var container = document.getElementById('stageBreakdown');
+    container.innerHTML = '';
+    STAGES.concat(OUTCOME_STAGES).forEach(function(stage) {
+      var count = scoped.filter(function(c) { return c.currentStage === stage; }).length;
+      var chip = document.createElement('div');
+      chip.className = 'stage-chip' + (OUTCOME_STAGES.indexOf(stage) !== -1 ? ' outcome' : '');
+      chip.innerHTML = '<span class="count">' + count + '</span><span>' + stage + '</span>';
+      container.appendChild(chip);
+    });
+  }
+
+  function renderPositionBreakdown() {
+    var scoped = getFilteredCandidates();
+    var container = document.getElementById('positionBreakdown');
+    container.innerHTML = '';
+    ROLE_ORDER.forEach(function(role) {
+      var count = scoped.filter(function(c) { return c.role === role; }).length;
+      var meta = roleMeta(role);
+      var chip = document.createElement('div');
+      chip.className = 'stage-chip';
+      chip.innerHTML =
+        '<span class="count">' + count + '</span>' +
+        '<span class="role-dot" style="background:' + meta.color + ';"></span>' +
+        '<span>' + role + '</span>';
+      container.appendChild(chip);
+    });
+  }
+
+  // ---- Kanban board -------------------------------------------------
+  // Moves a candidate to (possibly) a new stage, and positions them at a
+  // specific spot in that column based on where they were dropped — so you
+  // can drag a card to be first, last, or anywhere in between.
+  function reorderAndMove(id, newStage, clientY, dropZoneEl) {
+    var candidate = CANDIDATES.filter(function(x) { return x.id === id; })[0];
+    if (!candidate) return;
+
+    var siblingCards = Array.prototype.slice.call(dropZoneEl.querySelectorAll('[data-candidate-id]'))
+      .filter(function(el) { return el.getAttribute('data-candidate-id') !== id; });
+
+    var insertBeforeId = null;
+    for (var i = 0; i < siblingCards.length; i++) {
+      var box = siblingCards[i].getBoundingClientRect();
+      if (clientY < box.top + box.height / 2) {
+        insertBeforeId = siblingCards[i].getAttribute('data-candidate-id');
+        break;
+      }
+    }
+
+    // Pull the candidate out of the flat array first...
+    CANDIDATES.splice(CANDIDATES.indexOf(candidate), 1);
+
+    var movingIntoOutcome = OUTCOME_STAGES.indexOf(newStage) !== -1;
+    var wasInOutcome = OUTCOME_STAGES.indexOf(candidate.currentStage) !== -1;
+    // Remember how far they'd gotten before landing in Rejected/Withdrawn,
+    // so status derivation still reflects real progress, not the outcome itself.
+    if (movingIntoOutcome && !wasInOutcome) {
+      candidate.reachedStage = candidate.currentStage;
+    }
+    candidate.currentStage = newStage;
+
+    // ...then reinsert at the exact drop position. Array order (filtered by
+    // stage) is what renderKanban uses to decide on-screen card order.
+    if (insertBeforeId) {
+      var insertBeforeCandidate = CANDIDATES.filter(function(x) { return x.id === insertBeforeId; })[0];
+      CANDIDATES.splice(CANDIDATES.indexOf(insertBeforeCandidate), 0, candidate);
+    } else {
+      CANDIDATES.push(candidate);
+    }
+
+    renderAll();
+  }
+
+  function renderKanban() {
+    var board = document.getElementById('kanbanBoard');
+    board.innerHTML = '';
+    var scoped = getFilteredCandidates();
+
+    STAGES.concat(OUTCOME_STAGES).forEach(function(stage) {
+      var isOutcome = OUTCOME_STAGES.indexOf(stage) !== -1;
+      // Order comes from CANDIDATES array order (not re-sorted here), so
+      // manual drag-to-reorder within a column persists across re-renders.
+      var cardsForStage = scoped.filter(function(c) { return c.currentStage === stage; });
+
+      var col = document.createElement('div');
+      col.className = 'kanban-column' + (isOutcome ? ' outcome-column' : '');
+      col.innerHTML =
+        '<div class="kanban-column-head"><h3>' + stage + '</h3>' +
+        '<span class="kanban-column-count">' + cardsForStage.length + '</span></div>' +
+        '<div class="kanban-cards" data-stage="' + stage + '"></div>';
+      var cardsEl = col.querySelector('.kanban-cards');
+
+      if (cardsForStage.length === 0) {
+        var empty = document.createElement('div');
+        empty.className = 'kanban-empty';
+        empty.textContent = 'No candidates';
+        cardsEl.appendChild(empty);
+      } else {
+        cardsForStage.forEach(function(c) {
+          var meta = roleMeta(c.role);
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'candidate-card';
+          btn.draggable = true;
+          btn.setAttribute('data-candidate-id', c.id);
+          btn.innerHTML =
+            '<div class="cc-head">' +
+              '<div class="cc-name">' + c.name + '</div>' +
+              '<span class="role-badge" title="' + c.role + '" style="background:' + meta.bg + ';color:' + meta.color + ';">' + meta.code + '</span>' +
+            '</div>' +
+            '<div class="cc-role">' + c.role + '</div>' +
+            '<div class="cc-meta">' +
+              '<span class="cc-date">Applied ' + fmtDate(new Date(c.dateApplied + 'T00:00:00')) + '</span>' +
+              '<span class="score-badge ' + scoreClass(c.score) + '">' + c.score + '</span>' +
+            '</div>';
+          cardsEl.appendChild(btn);
+        });
+      }
+
+      board.appendChild(col);
+    });
+
+    // Click a card to open its profile
+    board.querySelectorAll('[data-candidate-id]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        openCandidateModal(btn.getAttribute('data-candidate-id'));
+      });
+      btn.addEventListener('dragstart', function(e) {
+        e.dataTransfer.setData('text/plain', btn.getAttribute('data-candidate-id'));
+        e.dataTransfer.effectAllowed = 'move';
+        btn.classList.add('dragging');
+      });
+      btn.addEventListener('dragend', function() {
+        btn.classList.remove('dragging');
+      });
+    });
+
+    // Drag a card onto a column to move the candidate to that stage
+    board.querySelectorAll('.kanban-cards').forEach(function(dropZone) {
+      dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        dropZone.classList.add('drag-over');
+      });
+      dropZone.addEventListener('dragleave', function() {
+        dropZone.classList.remove('drag-over');
+      });
+      dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        var id = e.dataTransfer.getData('text/plain');
+        reorderAndMove(id, dropZone.getAttribute('data-stage'), e.clientY, dropZone);
+      });
+    });
+  }
+
+  // ---- Candidate modal ------------------------------------------------
+  var modal = document.getElementById('candidateModal');
+  var modalContent = document.getElementById('modalContent');
+
+  var STATUS_PILL_BG = {
+    pending: '#eeeeee', progress: '#fff4dd', done: '#e6f4ea', muted: '#eeeeee', flagged: '#fde8e8'
+  };
+  var STATUS_PILL_COLOR = {
+    pending: '#7a7a7a', progress: '#8a6100', done: '#1e7e34', muted: '#7a7a7a', flagged: '#b02a2a'
+  };
+
+  function statusSelect(field, labelText, status) {
+    var options = STATUS_OPTIONS[field].map(function(o) {
+      var selected = o.label === status.label ? ' selected' : '';
+      return '<option value="' + o.label + '"' + selected + '>' + o.label + '</option>';
+    }).join('');
+    return '<div class="status-item"><label>' + labelText + '</label>' +
+      '<select class="status-select" data-field="' + field + '" style="background:' + STATUS_PILL_BG[status.type] + ';color:' + STATUS_PILL_COLOR[status.type] + ';">' +
+        options +
+      '</select></div>';
+  }
+
+  function renderNotes(c) {
+    var listHtml = c.notes.length
+      ? c.notes.map(function(n, i) {
+          return '<li class="note-item" data-note-index="' + i + '">' +
+            '<div class="note-meta">' + n.author + ' &middot; ' + n.date + (n.edited ? ' &middot; <em>edited</em>' : '') + '</div>' +
+            '<div class="note-text">' + n.text + '</div>' +
+            '<button type="button" class="note-edit-btn" data-note-index="' + i + '">Edit</button>' +
+          '</li>';
+        }).join('')
+      : '<li class="note-item" style="color:var(--text-muted);">No notes yet.</li>';
+    return '<ul class="notes-list" id="notesList">' + listHtml + '</ul>';
+  }
+
+  // Wires up "Edit" on every note in the currently-rendered list. Re-run this
+  // any time #notesList is replaced (after adding, saving, or cancelling).
+  function attachNoteListeners(c) {
+    document.querySelectorAll('.note-edit-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(btn.getAttribute('data-note-index'), 10);
+        var note = c.notes[idx];
+        var li = btn.closest('.note-item');
+        li.innerHTML =
+          '<textarea class="note-edit-textarea">' + note.text + '</textarea>' +
+          '<div class="note-edit-actions">' +
+            '<button type="button" class="btn-save-note">Save</button>' +
+            '<button type="button" class="btn-cancel-note">Cancel</button>' +
+          '</div>';
+        li.querySelector('.btn-save-note').addEventListener('click', function() {
+          var newText = li.querySelector('.note-edit-textarea').value.trim();
+          if (newText) {
+            note.text = newText;
+            note.edited = true;
+          }
+          document.getElementById('notesList').outerHTML = renderNotes(c);
+          attachNoteListeners(c);
+        });
+        li.querySelector('.btn-cancel-note').addEventListener('click', function() {
+          document.getElementById('notesList').outerHTML = renderNotes(c);
+          attachNoteListeners(c);
+        });
+      });
+    });
+  }
+
+  function openCandidateModal(id) {
+    var c = CANDIDATES.filter(function(x) { return x.id === id; })[0];
+    if (!c) return;
+
+    var recording = requiresRecording(c.role)
+      ? (statusForVideo(c).type === 'done' || statusForVideo(c).type === 'progress'
+          ? '<a href="#" onclick="return false;">View submitted recording (mock link)</a>'
+          : 'Not yet submitted')
+      : 'Not required for this role';
+
+    modalContent.innerHTML =
+      '<div class="profile-header">' +
+        '<h2>' + c.name + '</h2>' +
+        '<p class="profile-sub">' + c.role + ' &middot; Applied ' + fmtDate(new Date(c.dateApplied + 'T00:00:00')) + '</p>' +
+        '<div class="current-stage-line">Current Stage: <span class="current-stage-pill">' + c.currentStage + '</span></div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<h4>Applicant Information</h4>' +
+        '<div class="profile-grid">' +
+          '<div class="profile-field"><label>Email</label><div>' + c.email + '</div></div>' +
+          '<div class="profile-field"><label>Phone</label><div>' + c.phone + '</div></div>' +
+          '<div class="profile-field"><label>LinkedIn / Online Profile</label><div><a href="' + c.profileUrl + '" target="_blank" rel="noopener">' + c.profileUrl + '</a></div></div>' +
+          '<div class="profile-field"><label>Position Applied For</label><div>' + c.role + '</div></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<div class="resume-recording-grid">' +
+          '<div>' +
+            '<h4>Resume</h4>' +
+            '<a class="resume-link" href="#" onclick="return false;">&#128196; View Resume (PDF)</a>' +
+            '<div class="hint">Placeholder link &mdash; resume file storage isn\'t connected yet.</div>' +
+          '</div>' +
+          '<div>' +
+            '<h4>60-Second Call Recording</h4>' +
+            '<div class="recording-value">' + recording + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<div class="position-highlight">' +
+          '<span class="role-badge-lg" style="background:' + roleMeta(c.role).bg + ';color:' + roleMeta(c.role).color + ';">' + roleMeta(c.role).code + '</span>' +
+          '<div>' +
+            '<div class="position-highlight-title">Resume highlights for ' + c.role + '</div>' +
+            '<ul class="resume-highlight-list">' +
+              c.resumeHighlights.map(function(item) {
+                return '<li class="resume-highlight-item"><input type="radio" disabled aria-hidden="true"><span>' + item + '</span></li>';
+              }).join('') +
+            '</ul>' +
+          '</div>' +
+        '</div>' +
+        '<div class="hint">Placeholder summary &mdash; automatic resume parsing isn\'t connected yet.</div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<h4>AI Screening Score</h4>' +
+        '<span class="score-badge ' + scoreClass(c.score) + '" style="font-size:14px;padding:5px 14px;">' + c.score + ' / 100</span>' +
+        '<div class="hint">Placeholder score &mdash; AI screening isn\'t connected yet.</div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<h4>Stage Statuses</h4>' +
+        '<p class="hint" style="margin:-4px 0 12px;">Override any of these to expedite a candidate &mdash; e.g. skip Video Verification and move straight to Interview.</p>' +
+        '<div class="status-grid">' +
+          statusSelect('video', 'Video Verification', statusForVideo(c)) +
+          statusSelect('assessment', 'Assessment', statusForAssessment(c)) +
+          statusSelect('interview', 'Interview', statusForInterview(c)) +
+        '</div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<h4>Notes</h4>' +
+        renderNotes(c) +
+        '<div class="add-note-row">' +
+          '<textarea id="newNoteText" placeholder="Add a note about this candidate&hellip;"></textarea>' +
+          '<button type="button" class="btn-add-note" id="addNoteBtn">Add Note</button>' +
+        '</div>' +
+        '<div class="hint">Notes are kept only for this browser session &mdash; nothing is saved to a server.</div>' +
+      '</div>' +
+
+      '<div class="profile-section" style="margin-bottom:0;">' +
+        '<h4>Application Timeline</h4>' +
+        '<ul class="timeline">' +
+          buildTimeline(c).map(function(ev) {
+            return '<li class="timeline-item"><div class="timeline-date">' + ev.date + '</div><div class="timeline-label">' + ev.label + '</div></li>';
+          }).join('') +
+        '</ul>' +
+      '</div>';
+
+    attachNoteListeners(c);
+
+    document.getElementById('addNoteBtn').addEventListener('click', function() {
+      var textarea = document.getElementById('newNoteText');
+      var text = textarea.value.trim();
+      if (!text) return;
+      c.notes.push({ date: fmtDate(TODAY), author: 'HR Admin', text: text });
+      document.getElementById('notesList').outerHTML = renderNotes(c);
+      attachNoteListeners(c);
+      textarea.value = '';
+    });
+
+    // Manually overriding a stage status (e.g. to expedite a candidate)
+    modalContent.querySelectorAll('.status-select').forEach(function(select) {
+      select.addEventListener('change', function() {
+        var field = select.getAttribute('data-field');
+        var value = select.value;
+        if (field === 'video') c.videoOverride = value;
+        if (field === 'assessment') c.assessmentOverride = value;
+        if (field === 'interview') c.interviewOverride = value;
+        var type = typeForStatusLabel(field, value);
+        select.style.background = STATUS_PILL_BG[type];
+        select.style.color = STATUS_PILL_COLOR[type];
+      });
+    });
+
+    modal.hidden = false;
+  }
+
+  document.getElementById('modalCloseBtn').addEventListener('click', function() {
+    modal.hidden = true;
+  });
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) modal.hidden = true;
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !modal.hidden) modal.hidden = true;
+  });
+
+  // ---- Date filter controls -------------------------------------------
+  document.getElementById('applyFilterBtn').addEventListener('click', function() {
+    var fromVal = document.getElementById('filterFrom').value;
+    var toVal = document.getElementById('filterTo').value;
+    if (!fromVal && !toVal) {
+      dateFilter = null;
+    } else {
+      var from = fromVal || toVal;
+      var to = toVal || fromVal;
+      if (from > to) { var tmp = from; from = to; to = tmp; }
+      dateFilter = { from: from, to: to };
+    }
+    renderAll();
+  });
+
+  // ---- Init -----------------------------------------------------------
+  renderAll();
+})();
+</script>
+
+</body>
+</html>
