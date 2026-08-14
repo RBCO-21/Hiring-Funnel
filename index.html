@@ -734,36 +734,7 @@
                 <p style="margin:0 0 20px;font-size:14px;color:var(--text-muted);">
                   Applying for <strong id="applyingForRoleTitle" style="color:var(--navy);">[Role title]</strong>
                 </p>
-                <div class="form-row">
-                  <div class="field">
-                    <label for="fullName">Full name <span class="required">*</span></label>
-                    <input type="text" id="fullName" name="full_name" required autocomplete="name">
-                  </div>
-                  <div class="field">
-                    <label for="email">Email <span class="required">*</span></label>
-                    <input type="email" id="email" name="email" required autocomplete="email">
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="field">
-                    <label for="phone">Phone number <span class="required">*</span></label>
-                    <input type="tel" id="phone" name="phone" required autocomplete="tel">
-                  </div>
-                  <div class="field">
-                    <label for="profileUrl">LinkedIn / Any online profile <span class="required">*</span></label>
-                    <input type="url" id="profileUrl" name="profile_url" placeholder="https://linkedin.com/in/..." required>
-                  </div>
-                </div>
-                <div class="field">
-                  <label for="resume">Resume / CV <span class="required">*</span></label>
-                  <div class="file-field">
-                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
-                  </div>
-                </div>
-                <div class="field" id="recordingField">
-                  <label for="recordingUrl">60-second call recording <span class="required">*</span> <span class="hint">(record a quick intro via Loom, Google Drive, etc. and paste the link)</span></label>
-                  <input type="url" id="recordingUrl" name="recording_url" placeholder="https://loom.com/share/...">
-                </div>
+                <div id="applyFormFields"></div>
                 <button type="submit" class="btn btn-primary">Submit Application</button>
                 <p class="form-note">By applying, you agree to be contacted about this opportunity.</p>
               </form>
@@ -904,6 +875,22 @@
       });
     });
 
+    // Default Application tab fields for a role. HR can add/remove/edit fields
+    // and toggle which ones are required from the Jobs pop-up on the dashboard.
+    function defaultApplicationFields(withRecording) {
+      var fields = [
+        { key: 'fullName', label: 'Full name', type: 'text', required: true },
+        { key: 'email', label: 'Email', type: 'email', required: true },
+        { key: 'phone', label: 'Phone number', type: 'tel', required: true },
+        { key: 'profileUrl', label: 'LinkedIn / Any online profile', type: 'url', required: true },
+        { key: 'resume', label: 'Resume / CV', type: 'file', required: true }
+      ];
+      if (withRecording) {
+        fields.push({ key: 'recordingUrl', label: '60-second call recording', type: 'url', required: true });
+      }
+      return fields;
+    }
+
     // Open roles
     var ROLES = [
       {
@@ -915,6 +902,7 @@
         locationType: 'Remote',
         department: 'Acquisitions',
         requiresRecording: true,
+        applicationFields: defaultApplicationFields(true),
         about: 'The first voice of COMPANY NAME. Every deal we do starts with a phone call, and that\'s you. You\'ll reach out to property owners, break the ice, and find the ones genuinely open to selling. No real estate experience needed — we teach the scripts and the process. What we can\'t teach is showing up and putting in the reps.',
         whatYouDo: [
           'Make outbound calls to property owners from our lists (using our dialer)',
@@ -949,6 +937,7 @@
         locationType: 'Remote',
         department: 'Acquisitions',
         requiresRecording: true,
+        applicationFields: defaultApplicationFields(true),
         about: 'A different kind of cold caller — one who hunts. Instead of dialing through a big list, you go deep: researching properties, using skip tracing to track down the real owner, and finding the best number to reach them. You work click-to-call (dialing one contact at a time, deliberately) so every conversation is targeted and higher quality. This is for someone who enjoys the detective work of finding the right person before the call.',
         whatYouDo: [
           'Research target properties and owners to find the real decision-maker',
@@ -986,6 +975,7 @@
         locationType: 'Remote',
         department: 'Acquisitions',
         requiresRecording: true,
+        applicationFields: defaultApplicationFields(true),
         about: 'Most deals aren\'t won on the first call — you keep them alive until they are. A huge share of our deals come from leads that weren\'t ready the first time. You own that long game: staying in touch with prospects over days, weeks, and months so warm leads never go cold.',
         whatYouDo: [
           'Work structured follow-up sequences by call, text, and email',
@@ -1020,6 +1010,7 @@
         locationType: 'Remote',
         department: 'Acquisitions',
         requiresRecording: true,
+        applicationFields: defaultApplicationFields(true),
         about: 'This is where deals are won. You\'ll talk to motivated sellers, build trust, understand their situation, and negotiate offers that work for everyone — then get the contract signed. It\'s a role for someone who loves the conversation and is driven by closing.',
         whatYouDo: [
           'Take live seller calls and scheduled appointments',
@@ -1054,6 +1045,7 @@
         locationType: 'Remote',
         department: 'Transactions',
         requiresRecording: false,
+        applicationFields: defaultApplicationFields(false),
         about: 'Once a contract is signed, you make sure it actually closes. You\'ll manage the paperwork, the deadlines, and the people — keeping every deal moving smoothly from contract to closing table so nothing gets dropped.',
         whatYouDo: [
           'Manage contracts, title, escrow, and closing documents',
@@ -1087,6 +1079,7 @@
         locationType: 'Remote',
         department: 'Disposition',
         requiresRecording: true,
+        applicationFields: defaultApplicationFields(true),
         about: 'Once we have a property under contract, your job is to sell it — quickly and at the right number. You\'ll build and work our cash-buyers list, market deals to investors, and negotiate the sale to close the loop on every deal.',
         whatYouDo: [
           'Build, grow, and manage the cash-buyers list',
@@ -1113,6 +1106,52 @@
       }
     ];
 
+    // Add any brand-new job posts created from the HR dashboard's "+ Add New
+    // Job" button. Same same-browser localStorage bridge as everything else
+    // here — added before overrides/visibility so those still apply to them.
+    (function addCustomJobs() {
+      var customJobs = [];
+      try {
+        customJobs = JSON.parse(localStorage.getItem('hf_custom_jobs')) || [];
+      } catch (e) {}
+      customJobs.forEach(function(job) { ROLES.push(job); });
+    })();
+
+    // Apply any overview edits made from the HR dashboard's Job pop-up. That
+    // editor writes to localStorage under this same key — only visible here
+    // when both pages are opened in the same browser (no shared backend yet).
+    (function applyJobOverrides() {
+      var overrides = {};
+      try {
+        overrides = JSON.parse(localStorage.getItem('hf_job_overrides')) || {};
+      } catch (e) {}
+      ROLES.forEach(function(role) {
+        var o = overrides[role.id];
+        if (!o) return;
+        if (o.location != null) role.location = o.location;
+        if (o.department != null) role.department = o.department;
+        if (o.employmentType) role.employmentType = o.employmentType;
+        if (o.locationType) role.locationType = o.locationType;
+        if (o.about != null) role.about = o.about;
+        if (o.whatYouDo) role.whatYouDo = o.whatYouDo;
+        if (o.whoFits) role.whoFits = o.whoFits;
+        if (o.niceToHave) role.niceToHave = o.niceToHave;
+        if (o.benefits) role.benefits = o.benefits;
+        if (o.applicationFields) role.applicationFields = o.applicationFields;
+      });
+    })();
+
+    // Hide any role the HR dashboard has toggled to "Inactive." That toggle
+    // writes to localStorage under this same key — only visible here when
+    // both pages are opened in the same browser (no shared backend yet).
+    (function hideInactiveRoles() {
+      var statusMap = {};
+      try {
+        statusMap = JSON.parse(localStorage.getItem('hf_job_active_status')) || {};
+      } catch (e) {}
+      ROLES = ROLES.filter(function(role) { return statusMap[role.id] !== false; });
+    })();
+
     var rolesList = document.getElementById('rolesList');
     var rolesCount = document.getElementById('rolesCount');
     var rolesListView = document.getElementById('rolesListView');
@@ -1134,6 +1173,37 @@
         '</div>';
       rolesList.appendChild(row);
     });
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
+
+    // Builds the Application tab's fields from the role's applicationFields
+    // config — HR can add/remove fields and toggle which ones are required
+    // from the Jobs pop-up on the dashboard.
+    function renderApplicationFields(role) {
+      var container = document.getElementById('applyFormFields');
+      container.innerHTML = '';
+      (role.applicationFields || []).forEach(function(field) {
+        var wrap = document.createElement('div');
+        wrap.className = 'field';
+        var labelHtml = '<label for="af_' + escapeHtml(field.key) + '">' + escapeHtml(field.label) +
+          (field.required ? ' <span class="required">*</span>' : '') + '</label>';
+        var inputHtml;
+        if (field.type === 'file') {
+          inputHtml = '<div class="file-field"><input type="file" id="af_' + escapeHtml(field.key) + '" name="' + escapeHtml(field.key) + '" accept=".pdf,.doc,.docx"' + (field.required ? ' required' : '') + '></div>';
+        } else if (field.type === 'textarea') {
+          inputHtml = '<textarea id="af_' + escapeHtml(field.key) + '" name="' + escapeHtml(field.key) + '" rows="4"' + (field.required ? ' required' : '') + '></textarea>';
+        } else {
+          var inputType = ['email', 'tel', 'url'].indexOf(field.type) !== -1 ? field.type : 'text';
+          inputHtml = '<input type="' + inputType + '" id="af_' + escapeHtml(field.key) + '" name="' + escapeHtml(field.key) + '"' + (field.required ? ' required' : '') + '>';
+        }
+        wrap.innerHTML = labelHtml + inputHtml;
+        container.appendChild(wrap);
+      });
+    }
 
     function openRoleDetail(role) {
       document.getElementById('roleDetailTitle').textContent = role.title;
@@ -1160,17 +1230,13 @@
 
       activateTab('overview');
 
+      renderApplicationFields(role);
+
       // Reset any previous submission state
       document.getElementById('applyForm').classList.remove('hidden');
       document.getElementById('applyForm').reset();
       document.getElementById('role').value = role.id;
       document.getElementById('formConfirmation').classList.remove('show');
-
-      // Only calling roles require the 60-second call recording
-      var recordingField = document.getElementById('recordingField');
-      var recordingInput = document.getElementById('recordingUrl');
-      recordingField.style.display = role.requiresRecording ? '' : 'none';
-      recordingInput.required = !!role.requiresRecording;
 
       rolesListView.hidden = true;
       roleDetailView.hidden = false;

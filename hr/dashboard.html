@@ -676,6 +676,305 @@
     text-align: center;
   }
   .footer-doc-content p { margin: 0; }
+  .doc-links-list { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+  .doc-links-empty { margin: 0; font-size: 12.5px; color: var(--text-muted); text-align: left; }
+  .doc-link-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .doc-link-item a {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .doc-link-item a:hover { text-decoration: underline; }
+  .doc-link-remove {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .doc-link-remove:hover { background: #eeeeee; color: #c0392b; }
+  .doc-link-add-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+    min-width: 220px;
+  }
+  .doc-link-label-input, .doc-link-url-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 12.5px;
+    box-sizing: border-box;
+  }
+  .doc-link-label-input:focus, .doc-link-url-input:focus { border-color: var(--gold); outline: none; }
+  .btn-add-doc-link {
+    width: 100%;
+    background: var(--white);
+    border: 1.5px dashed var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-weight: 700;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--navy);
+    cursor: pointer;
+  }
+  .btn-add-doc-link:hover { border-color: var(--gold); }
+
+  /* Jobs list (inside the footer "Jobs" dropdown) */
+  .jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    min-width: 260px;
+  }
+  .btn-add-job {
+    margin-top: 8px;
+    width: 100%;
+    background: var(--white);
+    border: 1.5px dashed var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--navy);
+    cursor: pointer;
+  }
+  .btn-add-job:hover { border-color: var(--gold); }
+  .job-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+    transition: box-shadow var(--t-fast), transform var(--t-fast);
+  }
+  .job-box:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); transform: translateY(-1px); }
+  .job-box-title { font-weight: 700; font-size: 13.5px; color: var(--navy); }
+  .job-box-dept { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+  .job-status-badge {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+  .job-status-badge.active { background: var(--green-bg); color: var(--green); }
+  .job-status-badge.inactive { background: #eeeeee; color: var(--text-muted); }
+
+  /* Job detail modal */
+  .job-detail-header h2 { font-size: 22px; margin-bottom: 4px; }
+  .job-detail-sub { color: var(--text-muted); font-size: 13.5px; margin-bottom: 20px; }
+  .job-edit-title-field { margin-bottom: 4px; }
+  .job-title-error {
+    display: none;
+    color: #b3261e;
+    font-size: 12.5px;
+    margin-top: 6px;
+  }
+  .job-title-error.show { display: block; }
+  .job-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+  .job-toggle-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .job-toggle-btn.active { background: var(--green); color: var(--white); }
+  .job-toggle-btn.inactive { background: #cccccc; color: var(--white); }
+  .job-toggle-hint { font-size: 12.5px; color: var(--text-muted); }
+  .job-edit-field { margin-bottom: 16px; }
+  .job-edit-field label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .job-edit-field label .hint { font-weight: 400; color: var(--text-muted); }
+  .job-edit-field textarea,
+  .job-edit-field input[type="text"],
+  .job-edit-field select {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 13.5px;
+    box-sizing: border-box;
+    background: var(--white);
+  }
+  .job-edit-field textarea { resize: vertical; }
+  .job-edit-field textarea:focus,
+  .job-edit-field input[type="text"]:focus,
+  .job-edit-field select:focus { border-color: var(--gold); outline: none; }
+  .job-edit-row { display: flex; gap: 16px; }
+  .job-edit-row .job-edit-field { flex: 1; }
+  .app-fields-hint { font-size: 12.5px; color: var(--text-muted); margin: 0 0 14px; }
+  .app-fields-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+    transition: background var(--t-fast);
+    border-radius: 6px;
+  }
+  .app-fields-editor.drag-over {
+    background: rgba(212,160,23,.12);
+    outline: 2px dashed var(--gold);
+    outline-offset: -4px;
+  }
+  .app-field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    transition: opacity var(--t-fast);
+  }
+  .app-field-row.dragging { opacity: .4; }
+  .app-field-drag-handle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    letter-spacing: -3px;
+    color: var(--text-muted);
+    cursor: grab;
+    padding: 0 2px;
+    user-select: none;
+  }
+  .app-field-label {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13.5px;
+    background: var(--white);
+  }
+  .app-field-label:focus { border-color: var(--gold); outline: none; }
+  .app-field-type {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 6px;
+    flex-shrink: 0;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .app-field-type:focus { border-color: var(--gold); outline: none; }
+  .app-field-required-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    color: var(--text);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .app-field-core-hint {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-style: italic;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+  }
+  .app-field-remove {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .app-field-remove:hover { background: #eeeeee; color: var(--red, #c0392b); }
+  .btn-add-app-field {
+    background: var(--white);
+    border: 1.5px dashed var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--navy);
+    cursor: pointer;
+    width: 100%;
+  }
+  .btn-add-app-field:hover { border-color: var(--gold); }
+  .btn-apply-job-changes {
+    width: 100%;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 13.5px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-apply-job-changes:hover { background: var(--navy-hover); }
+  .job-saved-notice {
+    display: none;
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--green);
+    font-weight: 600;
+  }
+  .job-saved-notice.show { display: block; }
   @media (max-width: 600px) {
     .footer-doc-links { flex-direction: column; align-items: stretch; gap: 0; }
     .footer-doc { max-width: none; }
@@ -740,21 +1039,43 @@
   <div class="hr-footer-inner">
     <div class="footer-doc-links">
       <details class="footer-doc">
-        <summary>SOPs</summary>
+        <summary>Jobs</summary>
         <div class="footer-doc-content">
-          <p>[No SOPs added yet &mdash; standard operating procedure documents will be linked here.]</p>
+          <div class="jobs-list" id="jobsList"></div>
+          <button type="button" class="btn-add-job" id="addJobBtn">+ Add New Job</button>
+        </div>
+      </details>
+      <details class="footer-doc">
+        <summary>SOPs</summary>
+        <div class="footer-doc-content" data-doc-category="sops">
+          <div class="doc-links-list" id="sopsLinksList"></div>
+          <div class="doc-link-add-row">
+            <input type="text" class="doc-link-label-input" placeholder="Label (e.g. Cold Calling SOP)">
+            <input type="url" class="doc-link-url-input" placeholder="https://...">
+            <button type="button" class="btn-add-doc-link">+ Add</button>
+          </div>
         </div>
       </details>
       <details class="footer-doc">
         <summary>Company Files</summary>
-        <div class="footer-doc-content">
-          <p>[No files added yet &mdash; shared company documents will be linked here.]</p>
+        <div class="footer-doc-content" data-doc-category="companyFiles">
+          <div class="doc-links-list" id="companyFilesLinksList"></div>
+          <div class="doc-link-add-row">
+            <input type="text" class="doc-link-label-input" placeholder="Label (e.g. Offer Letter Template)">
+            <input type="url" class="doc-link-url-input" placeholder="https://...">
+            <button type="button" class="btn-add-doc-link">+ Add</button>
+          </div>
         </div>
       </details>
       <details class="footer-doc">
         <summary>Resources</summary>
-        <div class="footer-doc-content">
-          <p>[No resources added yet &mdash; training material and reference links will be linked here.]</p>
+        <div class="footer-doc-content" data-doc-category="resources">
+          <div class="doc-links-list" id="resourcesLinksList"></div>
+          <div class="doc-link-add-row">
+            <input type="text" class="doc-link-label-input" placeholder="Label (e.g. Onboarding Guide)">
+            <input type="url" class="doc-link-url-input" placeholder="https://...">
+            <button type="button" class="btn-add-doc-link">+ Add</button>
+          </div>
         </div>
       </details>
     </div>
@@ -766,6 +1087,13 @@
   <div class="modal-panel">
     <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close">&times;</button>
     <div id="modalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="jobModal" hidden>
+  <div class="modal-panel">
+    <button type="button" class="modal-close" id="jobModalCloseBtn" aria-label="Close">&times;</button>
+    <div id="jobModalContent"></div>
   </div>
 </div>
 
@@ -1405,7 +1733,506 @@
     if (e.target === modal) modal.hidden = true;
   });
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && !modal.hidden) modal.hidden = true;
+    if (e.key !== 'Escape') return;
+    if (!modal.hidden) modal.hidden = true;
+    if (!jobModal.hidden) jobModal.hidden = true;
+  });
+
+  // ---- Jobs (public-page visibility toggle) ----------------------------
+  // Mirrors the roles published on the careers page. Toggling Active/Inactive
+  // writes to localStorage, which index.html reads on load to decide what to
+  // show. This works when both pages are opened in the same browser — it's a
+  // local demo bridge, not a real multi-user backend.
+  var JOB_STORAGE_KEY = 'hf_job_active_status';
+
+  // Default Application tab fields for a job — mirrors index.html's
+  // defaultApplicationFields(). Kept in sync manually since both are
+  // separate static files with no shared backend.
+  function defaultApplicationFields(withRecording) {
+    var fields = [
+      { key: 'fullName', label: 'Full name', type: 'text', required: true },
+      { key: 'email', label: 'Email', type: 'email', required: true },
+      { key: 'phone', label: 'Phone number', type: 'tel', required: true },
+      { key: 'profileUrl', label: 'LinkedIn / Any online profile', type: 'url', required: true },
+      { key: 'resume', label: 'Resume / CV', type: 'file', required: true }
+    ];
+    if (withRecording) {
+      fields.push({ key: 'recordingUrl', label: '60-second call recording', type: 'url', required: true });
+    }
+    return fields;
+  }
+
+  var JOBS = [
+    {
+      id: 'cold-caller', title: 'Cold Caller',
+      location: 'Remote (Anywhere)', employmentType: 'Full-time', locationType: 'Remote', department: 'Acquisitions',
+      applicationFields: defaultApplicationFields(true),
+      about: 'The first voice of COMPANY NAME. Every deal we do starts with a phone call, and that\'s you. You\'ll reach out to property owners, break the ice, and find the ones genuinely open to selling. No real estate experience needed — we teach the scripts and the process. What we can\'t teach is showing up and putting in the reps.',
+      whatYouDo: ['Make outbound calls to property owners from our lists (using our dialer)', 'Follow proven scripts to open conversations and build quick rapport', 'Spot motivated sellers and ask the right questions to qualify them', 'Log every call outcome and note accurately in our CRM', 'Book callbacks and hand warm leads to the acquisitions team', 'Hit daily targets for dials and talk time'],
+      whoFits: ['A clear, confident English speaker', 'Comfortable on the phone for several hours a day', 'Thick-skinned — you don\'t take "no" personally', 'Reliable, consistent, and coachable', 'Set up with a quiet workspace, stable internet, and a headset'],
+      niceToHave: ['Prior cold calling, telemarketing, or sales experience', 'Familiarity with dialers and CRMs'],
+      benefits: ['100% remote — work from home', '[pay] base + performance bonuses']
+    },
+    {
+      id: 'deep-prospector', title: 'Deep Prospector',
+      location: 'Remote (Anywhere)', employmentType: 'Full-time', locationType: 'Remote', department: 'Acquisitions',
+      applicationFields: defaultApplicationFields(true),
+      about: 'A different kind of cold caller — one who hunts. Instead of dialing through a big list, you go deep: researching properties, using skip tracing to track down the real owner, and finding the best number to reach them. You work click-to-call (dialing one contact at a time, deliberately) so every conversation is targeted and higher quality. This is for someone who enjoys the detective work of finding the right person before the call.',
+      whatYouDo: ['Research target properties and owners to find the real decision-maker', 'Use skip tracing tools to find accurate phone numbers and contact info', 'Verify ownership and dig past bad or outdated data', 'Make targeted click-to-call outreach (manual, one contact at a time)', 'Have deeper, more personalized conversations than high-volume calling', 'Log findings, numbers, and outcomes cleanly in the CRM', 'Prioritize the highest-potential leads to pursue'],
+      whoFits: ['Curious and resourceful — you like solving "who actually owns this?"', 'Comfortable on the phone and confident opening a conversation', 'Detail-oriented and patient with research', 'Familiar with (or quick to learn) skip tracing tools and property data', 'Reliable, self-directed, and organized', 'Set up with a quiet workspace, stable internet, and a headset'],
+      niceToHave: ['Experience with skip tracing tools and property/owner data platforms', 'Prior cold calling, real estate, or research/lead-generation experience', 'Familiarity with CRMs and pulling property data'],
+      benefits: ['100% remote — work from home', '[pay] base + performance bonuses']
+    },
+    {
+      id: 'follow-up-specialist', title: 'Follow-Up Specialist',
+      location: 'Remote (Anywhere)', employmentType: 'Full-time', locationType: 'Remote', department: 'Acquisitions',
+      applicationFields: defaultApplicationFields(true),
+      about: 'Most deals aren\'t won on the first call — you keep them alive until they are. A huge share of our deals come from leads that weren\'t ready the first time. You own that long game: staying in touch with prospects over days, weeks, and months so warm leads never go cold.',
+      whatYouDo: ['Work structured follow-up sequences by call, text, and email', 'Re-engage old and dormant leads and bring them back to life', 'Book appointments for the acquisitions/closing team', 'Keep detailed notes and manage follow-up cadences in the CRM', 'Prioritize which leads to touch and when'],
+      whoFits: ['Persistent and patient — you don\'t give up after one attempt', 'Organized, with strong follow-through', 'A great written and verbal communicator', 'Disciplined with a CRM and reminders', 'Set up with a quiet workspace and stable internet'],
+      niceToHave: ['Prior sales, follow-up, or customer success experience', 'Real estate or investment background', 'Experience with CRM automation and follow-up sequences'],
+      benefits: ['100% remote — work from home', '[pay] base + performance bonuses']
+    },
+    {
+      id: 'acquisitions-manager-closer', title: 'Acquisitions Manager / Closer',
+      location: 'Remote (Anywhere)', employmentType: 'Full-time', locationType: 'Remote', department: 'Acquisitions',
+      applicationFields: defaultApplicationFields(true),
+      about: 'This is where deals are won. You\'ll talk to motivated sellers, build trust, understand their situation, and negotiate offers that work for everyone — then get the contract signed. It\'s a role for someone who loves the conversation and is driven by closing.',
+      whatYouDo: ['Take live seller calls and scheduled appointments', 'Build rapport and uncover the seller\'s real motivation', 'Analyze the numbers and present offers (with support from the team)', 'Negotiate terms and handle objections', 'Get contracts signed and hand off cleanly to the transaction team', 'Manage the seller relationship all the way to close'],
+      whoFits: ['A strong, persuasive communicator who listens as well as you talk', 'Calm under pressure and quick on your feet', 'Comfortable with numbers and negotiation', 'Self-motivated and driven by hitting goals', 'Ideally experienced in sales or real estate (a big plus, not a must)'],
+      niceToHave: ['Prior acquisitions, sales closing, or real estate experience', 'Experience running comps or offer analysis'],
+      benefits: ['100% remote — work from home', '[pay] base + commission/bonuses on closed deals']
+    },
+    {
+      id: 'transaction-coordinator', title: 'Transaction Coordinator',
+      location: 'Remote (Anywhere)', employmentType: 'Full-time', locationType: 'Remote', department: 'Transactions',
+      applicationFields: defaultApplicationFields(false),
+      about: 'Once a contract is signed, you make sure it actually closes. You\'ll manage the paperwork, the deadlines, and the people — keeping every deal moving smoothly from contract to closing table so nothing gets dropped.',
+      whatYouDo: ['Manage contracts, title, escrow, and closing documents', 'Track deadlines and keep every party on schedule', 'Coordinate with title companies, sellers, buyers, and agents', 'Keep the pipeline updated and flag issues before they become problems', 'Make sure nothing falls through the cracks'],
+      whoFits: ['Highly organized and detail-obsessed', 'Deadline-driven and dependable', 'Comfortable reading and managing contracts and documents', 'A clear communicator across multiple parties', 'Calm, thorough, and proactive'],
+      niceToHave: ['Prior transaction coordination, title, escrow, or real estate admin experience', 'Familiarity with real estate contracts and closing processes'],
+      benefits: ['100% remote — work from home', '[pay] + performance bonuses']
+    },
+    {
+      id: 'disposition-manager', title: 'Disposition Manager (Dispo)',
+      location: 'Remote (Anywhere)', employmentType: 'Full-time', locationType: 'Remote', department: 'Disposition',
+      applicationFields: defaultApplicationFields(true),
+      about: 'Once we have a property under contract, your job is to sell it — quickly and at the right number. You\'ll build and work our cash-buyers list, market deals to investors, and negotiate the sale to close the loop on every deal.',
+      whatYouDo: ['Build, grow, and manage the cash-buyers list', 'Market new deals to investors and buyers', 'Negotiate with buyers and match properties to the right ones', 'Coordinate the sale/assignment through to close', 'Track buyer criteria and keep relationships warm'],
+      whoFits: ['Sales-minded and network-driven', 'Confident negotiating on both sides of a deal', 'Someone who understands numbers, margins, and what makes a deal work', 'Fast-moving, proactive, and organized', 'Comfortable building and maintaining relationships'],
+      niceToHave: ['Prior dispositions, sales, or real estate investment experience', 'An existing network of investors/cash buyers'],
+      benefits: ['100% remote — work from home', '[pay] base + commission/bonuses on closed deals']
+    }
+  ];
+
+  var JOB_OVERRIDE_KEY = 'hf_job_overrides';
+  var CUSTOM_JOBS_KEY = 'hf_custom_jobs';
+
+  // HR-created job posts, kept separate from the hardcoded JOBS list above.
+  // index.html reads this same key and appends them to the careers page.
+  function getCustomJobs() {
+    try {
+      return JSON.parse(localStorage.getItem(CUSTOM_JOBS_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveCustomJobs(jobs) {
+    localStorage.setItem(CUSTOM_JOBS_KEY, JSON.stringify(jobs));
+  }
+  function addCustomJob(job) {
+    var jobs = getCustomJobs();
+    jobs.push(job);
+    saveCustomJobs(jobs);
+  }
+  function allJobs() {
+    return JOBS.concat(getCustomJobs());
+  }
+
+  function slugify(str) {
+    return String(str).toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'job';
+  }
+  function generateUniqueJobId(title) {
+    var base = slugify(title);
+    var existingIds = allJobs().map(function(j) { return j.id; });
+    var id = base;
+    var n = 2;
+    while (existingIds.indexOf(id) !== -1) {
+      id = base + '-' + n;
+      n += 1;
+    }
+    return id;
+  }
+
+  function getJobStatusMap() {
+    try {
+      return JSON.parse(localStorage.getItem(JOB_STORAGE_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+  function isJobActive(id) {
+    return getJobStatusMap()[id] !== false; // default to active when unset
+  }
+  function setJobActive(id, active) {
+    var map = getJobStatusMap();
+    map[id] = active;
+    localStorage.setItem(JOB_STORAGE_KEY, JSON.stringify(map));
+  }
+
+  function getJobOverrides() {
+    try {
+      return JSON.parse(localStorage.getItem(JOB_OVERRIDE_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+  function setJobOverride(id, data) {
+    var overrides = getJobOverrides();
+    overrides[id] = data;
+    localStorage.setItem(JOB_OVERRIDE_KEY, JSON.stringify(overrides));
+  }
+  // The job merged with any HR-edited overview — this is what both the modal
+  // and the public careers page (via the same localStorage key) should show.
+  function getEffectiveJob(id) {
+    var job = allJobs().filter(function(j) { return j.id === id; })[0];
+    if (!job) return null;
+    var override = getJobOverrides()[id];
+    if (!override) return job;
+    return {
+      id: job.id,
+      title: job.title,
+      location: override.location != null ? override.location : job.location,
+      employmentType: override.employmentType || job.employmentType,
+      locationType: override.locationType || job.locationType,
+      department: override.department != null ? override.department : job.department,
+      about: override.about != null ? override.about : job.about,
+      whatYouDo: override.whatYouDo || job.whatYouDo,
+      whoFits: override.whoFits || job.whoFits,
+      niceToHave: override.niceToHave || job.niceToHave,
+      benefits: override.benefits || job.benefits,
+      applicationFields: override.applicationFields || job.applicationFields
+    };
+  }
+
+  var jobFieldCounter = 0;
+  function newCustomFieldKey() {
+    jobFieldCounter += 1;
+    return 'custom_' + jobFieldCounter;
+  }
+
+  function selectOptions(options, selected) {
+    return options.map(function(opt) {
+      return '<option value="' + opt + '"' + (opt === selected ? ' selected' : '') + '>' + opt + '</option>';
+    }).join('');
+  }
+
+  function linesToList(text) {
+    return text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
+  }
+
+  var CORE_APP_FIELD_KEYS = ['fullName', 'email', 'resume'];
+  var APP_FIELD_TYPES = [
+    { value: 'text', label: 'Text' },
+    { value: 'email', label: 'Email' },
+    { value: 'tel', label: 'Phone' },
+    { value: 'url', label: 'URL' },
+    { value: 'file', label: 'File' },
+    { value: 'textarea', label: 'Long Text' }
+  ];
+
+  function escAttr(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  }
+
+  function appFieldTypeOptionsHtml(selected) {
+    return APP_FIELD_TYPES.map(function(t) {
+      return '<option value="' + t.value + '"' + (t.value === selected ? ' selected' : '') + '>' + t.label + '</option>';
+    }).join('');
+  }
+
+  function buildAppFieldRow(field) {
+    var row = document.createElement('div');
+    row.className = 'app-field-row';
+    row.setAttribute('data-key', field.key);
+    var isCore = CORE_APP_FIELD_KEYS.indexOf(field.key) !== -1;
+    row.innerHTML =
+      '<span class="app-field-drag-handle" draggable="true" title="Drag to reorder">&#8942;&#8942;</span>' +
+      '<input type="text" class="app-field-label" value="' + escAttr(field.label) + '">' +
+      '<select class="app-field-type">' + appFieldTypeOptionsHtml(field.type) + '</select>' +
+      '<label class="app-field-required-label"><input type="checkbox" class="app-field-required"' + (field.required ? ' checked' : '') + '> Required</label>' +
+      (isCore ? '<span class="app-field-core-hint">Core field</span>' : '<button type="button" class="app-field-remove" aria-label="Remove field">&times;</button>');
+    var removeBtn = row.querySelector('.app-field-remove');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function() { row.remove(); });
+    }
+    var handle = row.querySelector('.app-field-drag-handle');
+    handle.addEventListener('dragstart', function(e) {
+      e.dataTransfer.setData('text/plain', field.key);
+      e.dataTransfer.effectAllowed = 'move';
+      row.classList.add('dragging');
+    });
+    handle.addEventListener('dragend', function() {
+      row.classList.remove('dragging');
+    });
+    return row;
+  }
+
+  // Drop anywhere in the editor reorders the dragged field to that spot —
+  // position is resolved once, on drop, the same way Kanban cards reorder.
+  function wireAppFieldsReorder(container) {
+    container.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      container.classList.add('drag-over');
+    });
+    container.addEventListener('dragleave', function(e) {
+      if (!container.contains(e.relatedTarget)) container.classList.remove('drag-over');
+    });
+    container.addEventListener('drop', function(e) {
+      e.preventDefault();
+      container.classList.remove('drag-over');
+      var draggedKey = e.dataTransfer.getData('text/plain');
+      var draggedRow = container.querySelector('.app-field-row[data-key="' + draggedKey + '"]');
+      if (!draggedRow) return;
+
+      var siblings = Array.prototype.slice.call(container.querySelectorAll('.app-field-row'))
+        .filter(function(r) { return r !== draggedRow; });
+      var insertBeforeRow = null;
+      for (var i = 0; i < siblings.length; i++) {
+        var box = siblings[i].getBoundingClientRect();
+        if (e.clientY < box.top + box.height / 2) {
+          insertBeforeRow = siblings[i];
+          break;
+        }
+      }
+      if (insertBeforeRow) {
+        container.insertBefore(draggedRow, insertBeforeRow);
+      } else {
+        container.appendChild(draggedRow);
+      }
+    });
+  }
+
+  function readAppFieldsFromDom() {
+    return Array.prototype.map.call(document.querySelectorAll('#appFieldsEditor .app-field-row'), function(row) {
+      return {
+        key: row.getAttribute('data-key'),
+        type: row.querySelector('.app-field-type').value,
+        label: row.querySelector('.app-field-label').value.trim(),
+        required: row.querySelector('.app-field-required').checked
+      };
+    });
+  }
+
+  function renderJobsList() {
+    var container = document.getElementById('jobsList');
+    container.innerHTML = '';
+    allJobs().forEach(function(job) {
+      var active = isJobActive(job.id);
+      var effective = getEffectiveJob(job.id);
+      var box = document.createElement('button');
+      box.type = 'button';
+      box.className = 'job-box';
+      box.innerHTML =
+        '<div>' +
+          '<div class="job-box-title">' + job.title + '</div>' +
+          '<div class="job-box-dept">' + (effective.department || '') + '</div>' +
+        '</div>' +
+        '<span class="job-status-badge ' + (active ? 'active' : 'inactive') + '">' + (active ? 'Active' : 'Inactive') + '</span>';
+      box.addEventListener('click', function() { openJobModal(job.id); });
+      container.appendChild(box);
+    });
+  }
+
+  var jobModal = document.getElementById('jobModal');
+  var jobModalContent = document.getElementById('jobModalContent');
+
+  var BLANK_JOB_DRAFT = {
+    title: '', location: 'Remote (Anywhere)', department: '', employmentType: 'Full-time', locationType: 'Remote',
+    about: '', whatYouDo: [], whoFits: [], niceToHave: [], benefits: [],
+    applicationFields: defaultApplicationFields(false)
+  };
+
+  function renderJobModalContent(job) {
+    var isNew = !job;
+    var active = isNew ? true : isJobActive(job.id);
+    var effective = isNew ? BLANK_JOB_DRAFT : getEffectiveJob(job.id);
+
+    jobModalContent.innerHTML =
+      '<div class="job-detail-header">' +
+        (isNew ?
+          '<h2>New Job Post</h2>' +
+          '<div class="job-edit-field job-edit-title-field">' +
+            '<label for="jobEditTitle">Job Title</label>' +
+            '<input type="text" id="jobEditTitle" placeholder="e.g. Inside Sales Rep" value="">' +
+            '<div class="job-title-error" id="jobTitleError">Please enter a job title.</div>' +
+          '</div>'
+        :
+          '<h2>' + job.title + '</h2>' +
+          '<p class="job-detail-sub">' + effective.department + ' &middot; ' + effective.locationType + ' &middot; ' + effective.employmentType + '</p>'
+        ) +
+      '</div>' +
+
+      (isNew ? '' :
+      '<div class="job-toggle-row">' +
+        '<button type="button" class="job-toggle-btn ' + (active ? 'active' : 'inactive') + '" id="jobToggleBtn">' + (active ? 'Active' : 'Inactive') + '</button>' +
+        '<div class="job-toggle-hint">' + (active ? 'Visible to applicants on the careers page.' : 'Hidden from the careers page — applicants can\'t see or apply to this role.') + '</div>' +
+      '</div>') +
+
+      '<div class="profile-section">' +
+        '<h4>Job Details</h4>' +
+        '<div class="job-edit-row">' +
+          '<div class="job-edit-field">' +
+            '<label for="jobEditLocation">Location</label>' +
+            '<input type="text" id="jobEditLocation" value="' + effective.location + '">' +
+          '</div>' +
+          '<div class="job-edit-field">' +
+            '<label for="jobEditDepartment">Department</label>' +
+            '<input type="text" id="jobEditDepartment" value="' + effective.department + '">' +
+          '</div>' +
+        '</div>' +
+        '<div class="job-edit-row">' +
+          '<div class="job-edit-field">' +
+            '<label for="jobEditEmploymentType">Employment Type</label>' +
+            '<select id="jobEditEmploymentType">' + selectOptions(['Full-time', 'Part-time', 'Flexible', 'Contract'], effective.employmentType) + '</select>' +
+          '</div>' +
+          '<div class="job-edit-field">' +
+            '<label for="jobEditLocationType">Location Type</label>' +
+            '<select id="jobEditLocationType">' + selectOptions(['Remote', 'Hybrid', 'On-site'], effective.locationType) + '</select>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<h4>Overview</h4>' +
+        '<div class="job-edit-field">' +
+          '<label for="jobEditAbout">About the Role</label>' +
+          '<textarea id="jobEditAbout" rows="4">' + effective.about + '</textarea>' +
+        '</div>' +
+        '<div class="job-edit-field">' +
+          '<label for="jobEditWhatYouDo">You Will <span class="hint">(one per line)</span></label>' +
+          '<textarea id="jobEditWhatYouDo" rows="5">' + effective.whatYouDo.join('\n') + '</textarea>' +
+        '</div>' +
+        '<div class="job-edit-field">' +
+          '<label for="jobEditWhoFits">You Are <span class="hint">(one per line)</span></label>' +
+          '<textarea id="jobEditWhoFits" rows="5">' + effective.whoFits.join('\n') + '</textarea>' +
+        '</div>' +
+        '<div class="job-edit-field">' +
+          '<label for="jobEditNiceToHave">Nice to Have <span class="hint">(one per line)</span></label>' +
+          '<textarea id="jobEditNiceToHave" rows="3">' + effective.niceToHave.join('\n') + '</textarea>' +
+        '</div>' +
+        '<div class="job-edit-field">' +
+          '<label for="jobEditBenefits">Benefits <span class="hint">(one per line)</span></label>' +
+          '<textarea id="jobEditBenefits" rows="3">' + effective.benefits.join('\n') + '</textarea>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<h4>Application Form</h4>' +
+        '<p class="app-fields-hint">Uncheck Required to make a field optional — applicants can still submit without filling it in. Use "Add Field" to ask something extra for this role.</p>' +
+        '<div class="app-fields-editor" id="appFieldsEditor"></div>' +
+        '<button type="button" class="btn-add-app-field" id="addAppFieldBtn">+ Add Field</button>' +
+      '</div>' +
+
+      '<div class="profile-section">' +
+        '<button type="button" class="btn-apply-job-changes" id="applyJobChangesBtn">' + (isNew ? 'Create Job Post' : 'Apply Changes') + '</button>' +
+        '<div class="job-saved-notice" id="jobSavedNotice">' + (isNew ? 'Job created &mdash; it now appears on the careers page (same browser).' : 'Changes applied &mdash; the careers page will show this the next time it loads (same browser).') + '</div>' +
+      '</div>';
+
+    var appFieldsEditor = document.getElementById('appFieldsEditor');
+    (effective.applicationFields || []).forEach(function(field) {
+      appFieldsEditor.appendChild(buildAppFieldRow(field));
+    });
+    wireAppFieldsReorder(appFieldsEditor);
+    document.getElementById('addAppFieldBtn').addEventListener('click', function() {
+      appFieldsEditor.appendChild(buildAppFieldRow({ key: newCustomFieldKey(), label: 'New Question', type: 'text', required: false }));
+    });
+
+    if (!isNew) {
+      document.getElementById('jobToggleBtn').addEventListener('click', function() {
+        setJobActive(job.id, !isJobActive(job.id));
+        renderJobModalContent(job);
+        renderJobsList();
+      });
+    }
+
+    document.getElementById('applyJobChangesBtn').addEventListener('click', function() {
+      var newLocation = document.getElementById('jobEditLocation').value.trim();
+      var newDepartment = document.getElementById('jobEditDepartment').value.trim();
+      var newEmploymentType = document.getElementById('jobEditEmploymentType').value;
+      var newLocationType = document.getElementById('jobEditLocationType').value;
+      var newAbout = document.getElementById('jobEditAbout').value.trim();
+      var newWhatYouDo = linesToList(document.getElementById('jobEditWhatYouDo').value);
+      var newWhoFits = linesToList(document.getElementById('jobEditWhoFits').value);
+      var newNiceToHave = linesToList(document.getElementById('jobEditNiceToHave').value);
+      var newBenefits = linesToList(document.getElementById('jobEditBenefits').value);
+      var newAppFields = readAppFieldsFromDom();
+
+      if (isNew) {
+        var title = document.getElementById('jobEditTitle').value.trim();
+        if (!title) {
+          document.getElementById('jobTitleError').classList.add('show');
+          return;
+        }
+        var newJob = {
+          id: generateUniqueJobId(title),
+          title: title,
+          location: newLocation,
+          department: newDepartment,
+          employmentType: newEmploymentType,
+          locationType: newLocationType,
+          about: newAbout,
+          whatYouDo: newWhatYouDo,
+          whoFits: newWhoFits,
+          niceToHave: newNiceToHave,
+          benefits: newBenefits,
+          applicationFields: newAppFields
+        };
+        addCustomJob(newJob);
+        renderJobsList();
+        renderJobModalContent(newJob);
+        document.getElementById('jobSavedNotice').classList.add('show');
+      } else {
+        setJobOverride(job.id, {
+          location: newLocation,
+          department: newDepartment,
+          employmentType: newEmploymentType,
+          locationType: newLocationType,
+          about: newAbout,
+          whatYouDo: newWhatYouDo,
+          whoFits: newWhoFits,
+          niceToHave: newNiceToHave,
+          benefits: newBenefits,
+          applicationFields: newAppFields
+        });
+        jobModalContent.querySelector('.job-detail-sub').textContent =
+          newDepartment + ' · ' + newLocationType + ' · ' + newEmploymentType;
+        renderJobsList();
+        document.getElementById('jobSavedNotice').classList.add('show');
+      }
+    });
+  }
+
+  function openJobModal(id) {
+    var job = allJobs().filter(function(j) { return j.id === id; })[0];
+    if (!job) return;
+    renderJobModalContent(job);
+    jobModal.hidden = false;
+  }
+
+  function openNewJobModal() {
+    renderJobModalContent(null);
+    jobModal.hidden = false;
+  }
+
+  document.getElementById('jobModalCloseBtn').addEventListener('click', function() {
+    jobModal.hidden = true;
+  });
+  jobModal.addEventListener('click', function(e) {
+    if (e.target === jobModal) jobModal.hidden = true;
   });
 
   // ---- Date filter controls -------------------------------------------
@@ -1423,8 +2250,91 @@
     renderAll();
   });
 
+  document.getElementById('addJobBtn').addEventListener('click', openNewJobModal);
+
+  // ---- Footer doc links (SOPs / Company Files / Resources) -------------
+  // These are plain links (open in a new tab), not uploaded files — nothing
+  // here is downloadable, HR just points at wherever the doc already lives
+  // (Google Doc, Notion page, etc). Stored locally in this browser only.
+  var FOOTER_DOCS_KEY = 'hf_footer_docs';
+  var DOC_CATEGORIES = ['sops', 'companyFiles', 'resources'];
+
+  function getFooterDocs() {
+    try {
+      var docs = JSON.parse(localStorage.getItem(FOOTER_DOCS_KEY)) || {};
+      DOC_CATEGORIES.forEach(function(cat) { if (!docs[cat]) docs[cat] = []; });
+      return docs;
+    } catch (e) {
+      return { sops: [], companyFiles: [], resources: [] };
+    }
+  }
+  function saveFooterDocs(docs) {
+    localStorage.setItem(FOOTER_DOCS_KEY, JSON.stringify(docs));
+  }
+
+  function renderDocLinksList(category) {
+    var docs = getFooterDocs();
+    var list = docs[category];
+    var container = document.getElementById(category + 'LinksList');
+    container.innerHTML = '';
+    if (!list.length) {
+      var empty = document.createElement('p');
+      empty.className = 'doc-links-empty';
+      empty.textContent = 'No links added yet.';
+      container.appendChild(empty);
+      return;
+    }
+    list.forEach(function(item, idx) {
+      var row = document.createElement('div');
+      row.className = 'doc-link-item';
+      var a = document.createElement('a');
+      a.href = item.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = item.label;
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'doc-link-remove';
+      removeBtn.setAttribute('aria-label', 'Remove link');
+      removeBtn.innerHTML = '&times;';
+      removeBtn.addEventListener('click', function() {
+        var docs2 = getFooterDocs();
+        docs2[category].splice(idx, 1);
+        saveFooterDocs(docs2);
+        renderDocLinksList(category);
+      });
+      row.appendChild(a);
+      row.appendChild(removeBtn);
+      container.appendChild(row);
+    });
+  }
+
+  function wireDocLinkAdd(category) {
+    var section = document.querySelector('[data-doc-category="' + category + '"]');
+    var labelInput = section.querySelector('.doc-link-label-input');
+    var urlInput = section.querySelector('.doc-link-url-input');
+    var addBtn = section.querySelector('.btn-add-doc-link');
+    addBtn.addEventListener('click', function() {
+      var label = labelInput.value.trim();
+      var url = urlInput.value.trim();
+      if (!label || !url) return;
+      var docs = getFooterDocs();
+      docs[category].push({ label: label, url: url });
+      saveFooterDocs(docs);
+      labelInput.value = '';
+      urlInput.value = '';
+      renderDocLinksList(category);
+    });
+  }
+
+  DOC_CATEGORIES.forEach(function(cat) {
+    renderDocLinksList(cat);
+    wireDocLinkAdd(cat);
+  });
+
   // ---- Init -----------------------------------------------------------
   renderAll();
+  renderJobsList();
 })();
 </script>
 
